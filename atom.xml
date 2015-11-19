@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://cunqi.github.io/"/>
-  <updated>2015-11-19T21:26:57.000Z</updated>
+  <updated>2015-11-19T21:40:27.000Z</updated>
   <id>http://cunqi.github.io/</id>
   
   <author>
@@ -19,97 +19,79 @@
     <link href="http://cunqi.github.io/2015/11/19/Swift%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"/>
     <id>http://cunqi.github.io/2015/11/19/Swift知识点总结/</id>
     <published>2015-11-19T21:26:01.000Z</published>
-    <updated>2015-11-19T21:26:57.000Z</updated>
-    <content type="html"><![CDATA[<p>#Swift学习笔记</p>
-<p>##let与var的区别</p>
-<ul>
+    <updated>2015-11-19T21:40:27.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="Swift学习笔记">Swift学习笔记</h1><p>##写在前面<br>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
+<h2 id="let与var的区别">let与var的区别</h2><ul>
 <li><code>let</code> 为常量，一旦赋值后不可改变, <code>var</code>为变量，赋值后可以改变其引用</li>
 </ul>
-<p>##分号</p>
-<ul>
+<h2 id="分号">分号</h2><ul>
 <li>分号在Swift中并不强制要求使用，但是如果在一行代码内编写多条独立语句则需要使用分号<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cat = <span class="string">"?"</span>; <span class="built_in">print</span>(cat)</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<p>##类型别名</p>
-<ul>
+<h2 id="类型别名">类型别名</h2><ul>
 <li>使用类型别名来给一个类型取一个更有意义的名字</li>
 </ul>
-<p>##元组</p>
-<ul>
+<h2 id="元组">元组</h2><ul>
 <li>元组可以使用下标访问，类似数组，从0开始</li>
 </ul>
-<p>##可选类型（Optional）</p>
-<ul>
+<h2 id="可选类型（Optional）">可选类型（Optional）</h2><ul>
 <li>对一个被声明的可选变量或常量没有赋值，他们会被自动设置为<code>nil</code></li>
 <li>可以使用<code>if</code> 语句来进行<code>nil</code>的比较</li>
 <li>使用<code>!</code>进行强制解析，表明确定该可选类型必定有值</li>
 <li>使用类似 <code>if let x = str?</code> 的语句完成可选绑定</li>
 <li>使用<code>!</code>声明一个隐式可选类型</li>
 </ul>
-<p>##错误处理</p>
-<ul>
+<h2 id="错误处理">错误处理</h2><ul>
 <li>使用 <code>do {} catch {}</code>来检查一个错误</li>
 </ul>
-<p>##使用断言进行调试</p>
-<ul>
+<h2 id="使用断言进行调试">使用断言进行调试</h2><ul>
 <li>assert(x &gt;= 0, “error message”)</li>
 <li>assert(x &gt;= 0)</li>
 </ul>
-<p>##赋值操作</p>
-<ul>
+<h2 id="赋值操作">赋值操作</h2><ul>
 <li>赋值操作不会有返回值</li>
 </ul>
-<p>##取余运算</p>
-<ul>
+<h2 id="取余运算">取余运算</h2><ul>
 <li>在对负数取余时，会忽略除数的符号，这意味着<code>a % b</code> 等价于 <code>a % -b</code></li>
 <li>Swift 可以对浮点数取余 <code>8 % 2.5 = 0.5</code></li>
 </ul>
-<p>##空合运算符</p>
-<ul>
+<h2 id="空合运算符">空合运算符</h2><ul>
 <li>空合运算符作用于可选类型</li>
 <li><code>a ?? b</code> 表示 先取可选类型a的值，如果a的值为nil，那么返回默认值b</li>
 <li>a的原始值类型必须和b的相同</li>
 <li>空合运算符也使用了短路运算符</li>
 </ul>
-<p>##区间运算</p>
-<ul>
+<h2 id="区间运算">区间运算</h2><ul>
 <li>闭区间运算(1…5) <strong>3个点</strong>， 返回[1, 2, 3, 4, 5]</li>
 <li>半开区间运算(1..5) <strong>2个点</strong>， 返回[1, 2, 3, 4]</li>
 </ul>
-<p>##字符串</p>
-<ul>
+<h2 id="字符串">字符串</h2><ul>
 <li>字符串是值类型，猜想在赋值的时候是复制了字符串的值，使得每个变量的值都相互独立</li>
 <li><code>Character</code> 和 <code>String</code> 都使用 <code>&quot;&quot;</code>双引号赋值</li>
 <li>字符串类型兼容Unicode标准</li>
 <li>字符串类型的下标语法使用的是<code>String.Index</code>类型</li>
 <li><code>insert</code>方法插入的是一个<code>Character</code>， <code>insertContentsOf</code>方法插入的是一个<code>String</code></li>
 </ul>
-<p>##集合类型</p>
-<p>###数组</p>
-<ul>
+<h2 id="集合类型">集合类型</h2><h3 id="数组">数组</h3><ul>
 <li>数组也可以使用<code>+=</code>来添加相同类型的数组</li>
 <li>数组下标使用数字进行访问<code>num[0]</code></li>
 </ul>
-<p>###集合</p>
-<ul>
+<h3 id="集合">集合</h3><ul>
 <li>集合对象可以使用<code>sort()</code>返回一个有序的集合</li>
 <li>集合支持常用的操作， 交，并，减，加</li>
 </ul>
-<p>###字典</p>
-<ul>
+<h3 id="字典">字典</h3><ul>
 <li>在使用空字面量创建新集合时，需要预先知道该字典的类型。</li>
 <li>通过下标对字典的某个键值对赋值为<code>nil</code>移除该键值对</li>
 </ul>
-<p>##Switch语句</p>
-<ul>
+<h2 id="Switch语句">Switch语句</h2><ul>
 <li>Swift中Swift语句不存在隐式贯穿，即对于每个case不需要写break</li>
 <li>支持区间匹配</li>
 <li>支持多值匹配</li>
 <li>使用where语句为每个case添加限制条件</li>
 </ul>
-<p>##检测API可用性<br><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">9</span>, <span class="type">OSX</span> <span class="number">10.10</span>, *) &#123;</span><br><span class="line"><span class="comment">// 在 iOS 使用 iOS 9 的 API, 在 OS X 使用 OS X v10.10 的 API</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="comment">// 使用先前版本的 iOS 和 OS X 的 API</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>##函数</p>
-<ul>
+<h2 id="检测API可用性">检测API可用性</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">9</span>, <span class="type">OSX</span> <span class="number">10.10</span>, *) &#123;</span><br><span class="line"><span class="comment">// 在 iOS 使用 iOS 9 的 API, 在 OS X 使用 OS X v10.10 的 API</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="comment">// 使用先前版本的 iOS 和 OS X 的 API</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="函数">函数</h2><ul>
 <li>使用元组完成多个返回值的返回</li>
 <li>将拥有默认参数值的变量放在函数签名的最后（如果有多个参数都拥有默认参数值怎么办？）</li>
 <li>在类型后面添加<code>...</code>则讲变量声明为可变参数，同理可变参数需放在函数签名的最后</li>
@@ -122,20 +104,17 @@
 <li>函数也可以作为返回值</li>
 <li>函数定义在另一个函数体中被称为<code>嵌套函数</code>，而该函数体则被称为<code>外围函数</code></li>
 </ul>
-<p>##闭包</p>
-<ul>
+<h2 id="闭包">闭包</h2><ul>
 <li>内联闭包表达式构造的闭包作为参数传递给函数或方法时,都可以推断出闭包的参数和 返回值类型</li>
 <li>参数名称缩写，使用<code>$</code> + <code>数字</code> 完成对闭包参数的调用，<code>$0</code>开始</li>
 <li>自动闭包让你能够延迟求值</li>
 </ul>
-<p>##枚举</p>
-<ul>
+<h2 id="枚举">枚举</h2><ul>
 <li>关联值：枚举类型可以存储的值</li>
 <li>原始值：在定义时就预先定义好的值</li>
 <li>当原始值为字符串类型时，值为每个枚举类型的字符串表示</li>
 </ul>
-<p>##类与结构体</p>
-<ul>
+<h2 id="类与结构体">类与结构体</h2><ul>
 <li>类与结构体大部分相同</li>
 <li>类可以允许继承，可以被析构，可以被引用计数</li>
 <li>结构体通过复制在代码中传递，不存在引用计数</li>
@@ -143,55 +122,45 @@
 <li>结构体和枚举类型是值类型（值类型被赋予给一个变量、常量或者被传递给一个函数的时候,其值会被拷贝。）</li>
 <li>类是引用类型</li>
 </ul>
-<p>##字符串(String)、数组(Array)、和字典(Dictionary)类型的赋值与复制行为</p>
-<ul>
+<h2 id="字符串(String)、数组(Array)、和字典(Dictionary)类型的赋值与复制行为">字符串(String)、数组(Array)、和字典(Dictionary)类型的赋值与复制行为</h2><ul>
 <li><code>String</code>, <code>Array</code>, <code>Dictionary</code>都使用结构体实现，这意味着在赋值时使用的是值拷贝</li>
 <li><code>NSString</code>, <code>NSArray</code>, `NSDictionary·则使用的类实现，这意味着在赋值时使用的是引用传递</li>
 <li>值类型在声明为常量后，其属性不允许被修改</li>
 <li>引用类型则相反</li>
 <li>延迟存储属性：使用<code>lazy</code>关键字，使得属性在第一次调用的时候才会被赋值</li>
 </ul>
-<p>##计算属性</p>
-<ul>
+<h2 id="计算属性">计算属性</h2><ul>
 <li>通过提供<code>getter</code> 和 <code>setter</code>方法来间接获取或设置其他属性</li>
 </ul>
-<p>##类</p>
-<ul>
+<h2 id="类">类</h2><ul>
 <li>Swift中不存在隐式基类(如Java中的Object)</li>
 <li>使用<code>override</code>关键字表示重写</li>
 <li>使用<code>final</code>关键字防止重写</li>
 </ul>
-<p>##构造器</p>
-<ul>
+<h2 id="构造器">构造器</h2><ul>
 <li>构造器为属性赋值，不会触发属性观察器</li>
 <li>便利构造器来调用同一个类中的指定构造器</li>
 <li>指定构造器必须总是向上代理</li>
 <li>便利构造器必须总是横向代理</li>
 </ul>
-<p>##拓展</p>
-<ul>
+<h2 id="拓展">拓展</h2><ul>
 <li>extension 可以对一个已有类型添加新的功能，但是不能覆写(<code>override</code>)已有功能</li>
 <li>拓展可以添加计算属性，但是不能添加存储属性和属性观察器</li>
 </ul>
-<p>##模块和源文件</p>
-<ul>
+<h2 id="模块和源文件">模块和源文件</h2><ul>
 <li>模块指的是以独立单元构建和发布的 Framework 或 Application</li>
 <li>源文件指的是 Swift 中的   ,就是编写 Swift 源代码的文件</li>
 <li>公共级别的API需要是用public 来修饰，否则默认的internal级别已经够了</li>
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>#Swift学习笔记</p>
-<p>##let与var的区别</p>
-<ul>
-<li><code>let</code> 为常量，一旦赋值后不可改变, <code>var</code>为变量，赋值后可以改变其引用</li>
-</ul>
-<p>##分号</p>
-<ul>
-<l]]>
+    <![CDATA[<h1 id="Swift学习笔记">Swift学习笔记</h1><p>##写在前面<br>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
+<h2 id="]]>
     </summary>
     
       <category term="Swift" scheme="http://cunqi.github.io/tags/Swift/"/>
+    
+      <category term="Programming" scheme="http://cunqi.github.io/categories/Programming/"/>
     
   </entry>
   
