@@ -48,8 +48,8 @@
     <link href="http://cunqi.github.io/2015/11/19/Swift%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"/>
     <id>http://cunqi.github.io/2015/11/19/Swift知识点总结/</id>
     <published>2015-11-19T21:26:01.000Z</published>
-    <updated>2015-11-20T02:49:19.000Z</updated>
-    <content type="html"><![CDATA[<p>#写在前面<br>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
+    <updated>2015-11-20T02:58:17.000Z</updated>
+    <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1><p>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
 <h1 id="let与var的区别">let与var的区别</h1><ul>
 <li><code>let</code> 为常量，一旦赋值后不可改变, <code>var</code>为变量，赋值后可以改变其引用</li>
 </ul>
@@ -183,9 +183,8 @@
 </ul>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>#写在前面<br>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
-<h1 id="let与var的区别">let与var的区别</h1><ul>
-<l]]>
+    <![CDATA[<h1 id="写在前面">写在前面</h1><p>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
+<h1 id="let与var的区别">let与var的]]>
     </summary>
     
       <category term="Swift" scheme="http://cunqi.github.io/tags/Swift/"/>
