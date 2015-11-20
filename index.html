@@ -274,16 +274,243 @@
         
           <span itemprop="articleBody">
             
-              <p>#Builder模式<br>这个模式我是在《Effective Java》中了解到的，当然其他的设计模式相关书籍也有，我之前也看过一点，但是没怎么放在心上，在实习的时候我也尝试地使用过它，但是用的并不好，现在看来我只是学了一点皮毛罢了，现在重新跟着书本一点一点推敲一遍。</p>
+              <h1 id="Builder模式">Builder模式</h1><p>这个模式我是在《Effective Java》中了解到的，当然其他的设计模式相关书籍也有，我之前也看过一点，但是没怎么放在心上，在实习的时候我也尝试地使用过它，但是用的并不好，现在看来我只是学了一点皮毛罢了，现在重新跟着书本一点一点推敲一遍。</p>
 <h2 id="可以用Builder模式处理的问题">可以用Builder模式处理的问题</h2><p>在OOD的设计中，经常会出现一些类，他们拥有十几个成员变量，但是其中只有几个是必填的，其他的都是可选的，而我们要获取这种对象的方式，常规上有两种，一种是工厂方法，一种是构造器，从某种意义上来说，这两种方法实际上是一种方法，都需要我们手动的填入所有参数，或者提供若干个构造器，书上将这种模式称为 <strong>重叠构造器模式</strong> <code>(telescoping constructor)</code><br>这是一个例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;                      <span class="comment">//required</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String email;                     <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> age;                          <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String cellPhoneNumber;           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String homeAddress;               <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String githubLink;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//telescoping constructor</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(String name, String email)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(name, email, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(String name, String email, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(name, email, age, <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(String name, String email, <span class="keyword">int</span> age, String cellPhoneNumber)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(name, email, age, cellPhoneNumber, <span class="string">""</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(String name, String email, <span class="keyword">int</span> age, String cellPhoneNumber, String homeAddress)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>(name, email, age, cellPhoneNumber, homeAddress, <span class="string">""</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(String name, String email, <span class="keyword">int</span> age, String cellPhoneNumber, String homeAddress, String githubLink)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.email = email;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.cellPhoneNumber = cellPhoneNumber;</span><br><span class="line">        <span class="keyword">this</span>.homeAddress = homeAddress;</span><br><span class="line">        <span class="keyword">this</span>.githubLink = githubLink;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>可以看出上例，必填属性有两个，可选属性有四个，而我们需要提供的构造器，居然多达5个，这不仅使得代码的书写上变得繁琐，对于可读性来说也是一个很大的影响。试想一下，如果我们把<code>homeAddress</code>和<code>githubLink</code>的值弄反了，编译器也不会报错，因为它们都是<code>String</code>类型。</p>
-<p>##如何解决重叠构造器模式带来的弊端<br>从上面的的例子可以看出，对于这种复杂的对象，使用重叠构造器模式并不是一种很好的选择，有一种比重叠构造器更为有效的方法，叫做 <strong>JavaBean模式</strong>，这应该不是什么很高深的模式，从Java类的角度出发，这只是面向对象封装性的体现罢了。还是上面的例子，只不过我们换种写法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;                      <span class="comment">//required</span></span><br><span class="line">    <span class="keyword">private</span> String email;                     <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;                          <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String cellPhoneNumber;           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String homeAddress;               <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String githubLink;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.email = email;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//下同省略</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Member member = <span class="keyword">new</span> Member();</span><br><span class="line">        member.setName(<span class="string">"Jack"</span>);</span><br><span class="line">        member.setEmail(jack<span class="annotation">@gmail</span>.com);</span><br><span class="line">        member.setAge(<span class="number">24</span>);</span><br><span class="line">        ...</span><br><span class="line">        member.setGithubLink(<span class="string">"http://github.com/jack"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="如何解决重叠构造器模式带来的弊端">如何解决重叠构造器模式带来的弊端</h2><p>从上面的的例子可以看出，对于这种复杂的对象，使用重叠构造器模式并不是一种很好的选择，有一种比重叠构造器更为有效的方法，叫做 <strong>JavaBean模式</strong>，这应该不是什么很高深的模式，从Java类的角度出发，这只是面向对象封装性的体现罢了。还是上面的例子，只不过我们换种写法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;                      <span class="comment">//required</span></span><br><span class="line">    <span class="keyword">private</span> String email;                     <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;                          <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String cellPhoneNumber;           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String homeAddress;               <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> String githubLink;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setEmail</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.email = email;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//下同省略</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Member member = <span class="keyword">new</span> Member();</span><br><span class="line">        member.setName(<span class="string">"Jack"</span>);</span><br><span class="line">        member.setEmail(jack<span class="annotation">@gmail</span>.com);</span><br><span class="line">        member.setAge(<span class="number">24</span>);</span><br><span class="line">        ...</span><br><span class="line">        member.setGithubLink(<span class="string">"http://github.com/jack"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>可以看出这种方式避免了创建大量的构造器，甚至可以直接使用默认的构造器，当然这种方式也不是没有弊端，<strong>最大</strong>的弊端就是，将原本一次完成的初始化操作，变成了多次操作，这很像数据库中的<code>事务</code>，原本是一个批次全部处理，现在变成了一条一条处理，整个初始化操作的完整性得不到保证。可能会使代码出现潜在的风险，而且这种风险很难被探查出来。而且注意到它取消了属性的<code>final</code>关键字修饰，这使得这种类型的类在多线程的使用中需要调用者做出额外的操作以保证线程安全。</p>
 <pre><code>对于这种方式我觉得还有更进一步的改进，就是只为<span class="escape">`r</span>equired<span class="escape">`的</span>变量创建构造器，配合为可选变量提供<span class="escape">`s</span>et<span class="escape">`方</span>法，使得整体的情况变得稍微可控一些。
-</code></pre><p>##Builder模式<br>Builder模式可以说是兼顾了 <strong>重叠构造器</strong> 的安全性和 <strong>JavaBean模式</strong> 的可读性。他通过一个<code>builder</code>对象来完成数据对象的初始化操作。还是上面的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;                      <span class="comment">//required</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String email;                     <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> age = <span class="number">0</span>;                           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String cellPhoneNumber = <span class="string">""</span>;           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String homeAddress = <span class="string">""</span>;               <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String githubLink = <span class="string">""</span>;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String name;                <span class="comment">//required</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String email;               <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> age;                          <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String cellPhoneNumber;           <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String homeAddress;               <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String githubLink;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Builder</span><span class="params">(String name, String email)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">            <span class="keyword">this</span>.email = email;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">age</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.age = age;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">cellPhoneNumber</span><span class="params">(String cellPhoneNumber)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.cellPhoneNumber = cellPhoneNUmber;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//下同</span></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Member <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Member(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(Builder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = builder.name;</span><br><span class="line">        <span class="keyword">this</span>.email = builder.email;</span><br><span class="line">        <span class="keyword">this</span>.age = builder.age;</span><br><span class="line">        <span class="keyword">this</span>.cellPhoneNumber = builder.cellPhoneNumber;</span><br><span class="line">        <span class="keyword">this</span>.homeAddress = builder.homeAddress;</span><br><span class="line">        <span class="keyword">this</span>.githubLink = builder.githubLink;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Member member = <span class="keyword">new</span> Member.Builder(<span class="string">"Jack"</span>, <span class="string">"jack@gmail.com"</span>).age(<span class="number">24</span>).cellPhoneNumber(<span class="number">911</span>).githubLink(<span class="string">"http://github.com/jack"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</code></pre><h2 id="Builder模式-1">Builder模式</h2><p>Builder模式可以说是兼顾了 <strong>重叠构造器</strong> 的安全性和 <strong>JavaBean模式</strong> 的可读性。他通过一个<code>builder</code>对象来完成数据对象的初始化操作。还是上面的例子<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Member</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String name;                      <span class="comment">//required</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String email;                     <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> age = <span class="number">0</span>;                           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String cellPhoneNumber = <span class="string">""</span>;           <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String homeAddress = <span class="string">""</span>;               <span class="comment">//optional</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> String githubLink = <span class="string">""</span>;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Builder</span> </span>&#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String name;                <span class="comment">//required</span></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String email;               <span class="comment">//required</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">int</span> age;                          <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String cellPhoneNumber;           <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String homeAddress;               <span class="comment">//optional</span></span><br><span class="line">        <span class="keyword">private</span> String githubLink;                <span class="comment">//optional</span></span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Builder</span><span class="params">(String name, String email)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.name = name;</span><br><span class="line">            <span class="keyword">this</span>.email = email;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">age</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.age = age;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Builder <span class="title">cellPhoneNumber</span><span class="params">(String cellPhoneNumber)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">this</span>.cellPhoneNumber = cellPhoneNUmber;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//下同</span></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Member <span class="title">build</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Member(<span class="keyword">this</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Member</span><span class="params">(Builder builder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = builder.name;</span><br><span class="line">        <span class="keyword">this</span>.email = builder.email;</span><br><span class="line">        <span class="keyword">this</span>.age = builder.age;</span><br><span class="line">        <span class="keyword">this</span>.cellPhoneNumber = builder.cellPhoneNumber;</span><br><span class="line">        <span class="keyword">this</span>.homeAddress = builder.homeAddress;</span><br><span class="line">        <span class="keyword">this</span>.githubLink = builder.githubLink;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Member member = <span class="keyword">new</span> Member.Builder(<span class="string">"Jack"</span>, <span class="string">"jack@gmail.com"</span>).age(<span class="number">24</span>).cellPhoneNumber(<span class="number">911</span>).githubLink(<span class="string">"http://github.com/jack"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>可以看到上面的代码，首先发现<code>Member</code>的所有成员变量都是<code>final</code>修饰的，这意味着这个类是线程安全的，其次注意到<code>Builder</code>方法中，只有两个必填的字段是<code>final</code>修饰，其他可选的都没有用<code>final</code>修饰，其实这里之所以这么做是为了强制编译器进行类型检查，因为final对象要求必须先提供好值，或在构造器中完成初始化，这里用final修饰两个必填字段只是为了检查是否提供了包含两个必填字段参数的构造器。而<code>Builder</code>类中的各个可选变量方法(<code>age(), cellPhoneNumber()...</code>)的返回值都是Builder对象本身，这又构成了链式调用，怎么评价这链式调用呢，在写的时候挺爽的，一直<code>.</code>下去就行了，但是实际上反对者也有蛮多的，看人吧。实际上如果讲可选变量方法的返回值改成<code>void</code>就变成了<code>Java Bean模式</code>，实际上因为<code>required</code>成员变量的值已经被构造器完成了赋值操作后，在我看来这就是赤裸裸的<code>getter/setter</code>。</p>
-<p>##Builder模式的不足<br>因为在正常的类中多增加了一个<code>Builder</code>类，所以在创建对象时会存在一些额外的开销。在一些对性能要求很严苛的情况下应当避免使用Builder模式，在可变参数的数量较少时（小于4个）应当避免使用Builder模式，而应考虑重叠构造器模式，这会使得代码变得更为紧凑。除非这个类的成员变量个数可预见的会在未来增长，这个时候应当提前使用Builder模式已减小未来重构代码的代价。</p>
-<p>##一句话概括<br>Builder模式就是在应对大量可变参数，同时需要兼顾安全性时可以采用的一种创建对象实例的模式。</p>
+<h2 id="Builder模式的不足">Builder模式的不足</h2><p>因为在正常的类中多增加了一个<code>Builder</code>类，所以在创建对象时会存在一些额外的开销。在一些对性能要求很严苛的情况下应当避免使用Builder模式，在可变参数的数量较少时（小于4个）应当避免使用Builder模式，而应考虑重叠构造器模式，这会使得代码变得更为紧凑。除非这个类的成员变量个数可预见的会在未来增长，这个时候应当提前使用Builder模式已减小未来重构代码的代价。</p>
+<h2 id="一句话概括">一句话概括</h2><p>Builder模式就是在应对大量可变参数，同时需要兼顾安全性时可以采用的一种创建对象实例的模式。</p>
+
+            
+          </span>
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2015/11/19/Swift知识点总结/" itemprop="url">
+                  Swift知识点总结
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            Posted on
+            <time itemprop="dateCreated" datetime="2015-11-19T16:26:01-05:00" content="2015-11-19">
+              2015-11-19
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp; In
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Programming/" itemprop="url" rel="index">
+                    <span itemprop="name">Programming</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body">
+
+      
+      
+
+      
+        
+          <span itemprop="articleBody">
+            
+              <h1 id="Swift学习笔记">Swift学习笔记</h1><p>##写在前面<br>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
+<h2 id="let与var的区别">let与var的区别</h2><ul>
+<li><code>let</code> 为常量，一旦赋值后不可改变, <code>var</code>为变量，赋值后可以改变其引用</li>
+</ul>
+<h2 id="分号">分号</h2><ul>
+<li>分号在Swift中并不强制要求使用，但是如果在一行代码内编写多条独立语句则需要使用分号<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> cat = <span class="string">"?"</span>; <span class="built_in">print</span>(cat)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="类型别名">类型别名</h2><ul>
+<li>使用类型别名来给一个类型取一个更有意义的名字</li>
+</ul>
+<h2 id="元组">元组</h2><ul>
+<li>元组可以使用下标访问，类似数组，从0开始</li>
+</ul>
+<h2 id="可选类型（Optional）">可选类型（Optional）</h2><ul>
+<li>对一个被声明的可选变量或常量没有赋值，他们会被自动设置为<code>nil</code></li>
+<li>可以使用<code>if</code> 语句来进行<code>nil</code>的比较</li>
+<li>使用<code>!</code>进行强制解析，表明确定该可选类型必定有值</li>
+<li>使用类似 <code>if let x = str?</code> 的语句完成可选绑定</li>
+<li>使用<code>!</code>声明一个隐式可选类型</li>
+</ul>
+<h2 id="错误处理">错误处理</h2><ul>
+<li>使用 <code>do {} catch {}</code>来检查一个错误</li>
+</ul>
+<h2 id="使用断言进行调试">使用断言进行调试</h2><ul>
+<li>assert(x &gt;= 0, “error message”)</li>
+<li>assert(x &gt;= 0)</li>
+</ul>
+<h2 id="赋值操作">赋值操作</h2><ul>
+<li>赋值操作不会有返回值</li>
+</ul>
+<h2 id="取余运算">取余运算</h2><ul>
+<li>在对负数取余时，会忽略除数的符号，这意味着<code>a % b</code> 等价于 <code>a % -b</code></li>
+<li>Swift 可以对浮点数取余 <code>8 % 2.5 = 0.5</code></li>
+</ul>
+<h2 id="空合运算符">空合运算符</h2><ul>
+<li>空合运算符作用于可选类型</li>
+<li><code>a ?? b</code> 表示 先取可选类型a的值，如果a的值为nil，那么返回默认值b</li>
+<li>a的原始值类型必须和b的相同</li>
+<li>空合运算符也使用了短路运算符</li>
+</ul>
+<h2 id="区间运算">区间运算</h2><ul>
+<li>闭区间运算(1…5) <strong>3个点</strong>， 返回[1, 2, 3, 4, 5]</li>
+<li>半开区间运算(1..5) <strong>2个点</strong>， 返回[1, 2, 3, 4]</li>
+</ul>
+<h2 id="字符串">字符串</h2><ul>
+<li>字符串是值类型，猜想在赋值的时候是复制了字符串的值，使得每个变量的值都相互独立</li>
+<li><code>Character</code> 和 <code>String</code> 都使用 <code>&quot;&quot;</code>双引号赋值</li>
+<li>字符串类型兼容Unicode标准</li>
+<li>字符串类型的下标语法使用的是<code>String.Index</code>类型</li>
+<li><code>insert</code>方法插入的是一个<code>Character</code>， <code>insertContentsOf</code>方法插入的是一个<code>String</code></li>
+</ul>
+<h2 id="集合类型">集合类型</h2><h3 id="数组">数组</h3><ul>
+<li>数组也可以使用<code>+=</code>来添加相同类型的数组</li>
+<li>数组下标使用数字进行访问<code>num[0]</code></li>
+</ul>
+<h3 id="集合">集合</h3><ul>
+<li>集合对象可以使用<code>sort()</code>返回一个有序的集合</li>
+<li>集合支持常用的操作， 交，并，减，加</li>
+</ul>
+<h3 id="字典">字典</h3><ul>
+<li>在使用空字面量创建新集合时，需要预先知道该字典的类型。</li>
+<li>通过下标对字典的某个键值对赋值为<code>nil</code>移除该键值对</li>
+</ul>
+<h2 id="Switch语句">Switch语句</h2><ul>
+<li>Swift中Swift语句不存在隐式贯穿，即对于每个case不需要写break</li>
+<li>支持区间匹配</li>
+<li>支持多值匹配</li>
+<li>使用where语句为每个case添加限制条件</li>
+</ul>
+<h2 id="检测API可用性">检测API可用性</h2><figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> #available(iOS <span class="number">9</span>, <span class="type">OSX</span> <span class="number">10.10</span>, *) &#123;</span><br><span class="line"><span class="comment">// 在 iOS 使用 iOS 9 的 API, 在 OS X 使用 OS X v10.10 的 API</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="comment">// 使用先前版本的 iOS 和 OS X 的 API</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="函数">函数</h2><ul>
+<li>使用元组完成多个返回值的返回</li>
+<li>将拥有默认参数值的变量放在函数签名的最后（如果有多个参数都拥有默认参数值怎么办？）</li>
+<li>在类型后面添加<code>...</code>则讲变量声明为可变参数，同理可变参数需放在函数签名的最后</li>
+<li>一个函数最多拥有一个可变参数</li>
+<li>对参数名称使用<code>var</code>关键字，则将该变量变为可修改，但依然只是一个值副本的拷贝</li>
+<li>变量参数仅仅存在于函数调用的生命周期中。</li>
+<li>使用<code>&amp;</code>表示这是一个输入输出参数，且在函数签名中需使用<code>inout</code>关键字</li>
+<li>函数也有类型，函数的类型即为它的函数签名，即<code>参数列表 -&gt; 返回值</code></li>
+<li>函数也可以通过赋值语句指定给变量</li>
+<li>函数也可以作为返回值</li>
+<li>函数定义在另一个函数体中被称为<code>嵌套函数</code>，而该函数体则被称为<code>外围函数</code></li>
+</ul>
+<h2 id="闭包">闭包</h2><ul>
+<li>内联闭包表达式构造的闭包作为参数传递给函数或方法时,都可以推断出闭包的参数和 返回值类型</li>
+<li>参数名称缩写，使用<code>$</code> + <code>数字</code> 完成对闭包参数的调用，<code>$0</code>开始</li>
+<li>自动闭包让你能够延迟求值</li>
+</ul>
+<h2 id="枚举">枚举</h2><ul>
+<li>关联值：枚举类型可以存储的值</li>
+<li>原始值：在定义时就预先定义好的值</li>
+<li>当原始值为字符串类型时，值为每个枚举类型的字符串表示</li>
+</ul>
+<h2 id="类与结构体">类与结构体</h2><ul>
+<li>类与结构体大部分相同</li>
+<li>类可以允许继承，可以被析构，可以被引用计数</li>
+<li>结构体通过复制在代码中传递，不存在引用计数</li>
+<li>结构体拥有一个成员逐一构造器，新实例中各个属性的初始值可以通过属性的名称传递到成员逐一构造器之中。</li>
+<li>结构体和枚举类型是值类型（值类型被赋予给一个变量、常量或者被传递给一个函数的时候,其值会被拷贝。）</li>
+<li>类是引用类型</li>
+</ul>
+<h2 id="字符串(String)、数组(Array)、和字典(Dictionary)类型的赋值与复制行为">字符串(String)、数组(Array)、和字典(Dictionary)类型的赋值与复制行为</h2><ul>
+<li><code>String</code>, <code>Array</code>, <code>Dictionary</code>都使用结构体实现，这意味着在赋值时使用的是值拷贝</li>
+<li><code>NSString</code>, <code>NSArray</code>, `NSDictionary·则使用的类实现，这意味着在赋值时使用的是引用传递</li>
+<li>值类型在声明为常量后，其属性不允许被修改</li>
+<li>引用类型则相反</li>
+<li>延迟存储属性：使用<code>lazy</code>关键字，使得属性在第一次调用的时候才会被赋值</li>
+</ul>
+<h2 id="计算属性">计算属性</h2><ul>
+<li>通过提供<code>getter</code> 和 <code>setter</code>方法来间接获取或设置其他属性</li>
+</ul>
+<h2 id="类">类</h2><ul>
+<li>Swift中不存在隐式基类(如Java中的Object)</li>
+<li>使用<code>override</code>关键字表示重写</li>
+<li>使用<code>final</code>关键字防止重写</li>
+</ul>
+<h2 id="构造器">构造器</h2><ul>
+<li>构造器为属性赋值，不会触发属性观察器</li>
+<li>便利构造器来调用同一个类中的指定构造器</li>
+<li>指定构造器必须总是向上代理</li>
+<li>便利构造器必须总是横向代理</li>
+</ul>
+<h2 id="拓展">拓展</h2><ul>
+<li>extension 可以对一个已有类型添加新的功能，但是不能覆写(<code>override</code>)已有功能</li>
+<li>拓展可以添加计算属性，但是不能添加存储属性和属性观察器</li>
+</ul>
+<h2 id="模块和源文件">模块和源文件</h2><ul>
+<li>模块指的是以独立单元构建和发布的 Framework 或 Application</li>
+<li>源文件指的是 Swift 中的   ,就是编写 Swift 源代码的文件</li>
+<li>公共级别的API需要是用public 来修饰，否则默认的internal级别已经够了</li>
+</ul>
 
             
           </span>
