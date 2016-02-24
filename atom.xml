@@ -16,8 +16,8 @@
   
   <entry>
     <title><![CDATA[Controllers中传值的若干种方法]]></title>
-    <link href="http://cunqi.github.io/2016/01/16/Controllers%E4%B8%AD%E4%BC%A0%E5%80%BC%E7%9A%84%E8%8B%A5%E5%B9%B2%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
-    <id>http://cunqi.github.io/2016/01/16/Controllers中传值的若干种方法/</id>
+    <link href="http://cunqi.github.io/2016/01/15/Controllers%E4%B8%AD%E4%BC%A0%E5%80%BC%E7%9A%84%E8%8B%A5%E5%B9%B2%E7%A7%8D%E6%96%B9%E6%B3%95/"/>
+    <id>http://cunqi.github.io/2016/01/15/Controllers中传值的若干种方法/</id>
     <published>2016-01-15T22:36:43.000Z</published>
     <updated>2016-01-15T17:04:59.000Z</updated>
     <content type="html"><![CDATA[<h2 id="简介">简介</h2><p>在iOS开发中，经常会出现从一个Controller向另一Controller发送数据，并且将后者产生的数据回填给前者的情况，甚至有跨越多级的传值情况发生，针对于这些情况，结合我在日常编程和上网查阅资料中的理解，进行了一些关于Controllers中传值方法的总结。</p>
@@ -60,8 +60,8 @@
   
   <entry>
     <title><![CDATA[Java学习笔记-内部类与嵌套类]]></title>
-    <link href="http://cunqi.github.io/2015/12/08/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E5%B5%8C%E5%A5%97%E7%B1%BB/"/>
-    <id>http://cunqi.github.io/2015/12/08/Java学习笔记-内部类与嵌套类/</id>
+    <link href="http://cunqi.github.io/2015/12/07/Java%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-%E5%86%85%E9%83%A8%E7%B1%BB%E4%B8%8E%E5%B5%8C%E5%A5%97%E7%B1%BB/"/>
+    <id>http://cunqi.github.io/2015/12/07/Java学习笔记-内部类与嵌套类/</id>
     <published>2015-12-07T18:34:50.000Z</published>
     <updated>2015-12-07T20:37:32.000Z</updated>
     <content type="html"><![CDATA[<h2 id="什么是内部类">什么是内部类</h2><p>将一个类的定义放在另一个类的定义的内部，这就是内部类      ————《Java编程思想·第十章》</p>
@@ -102,8 +102,8 @@
   
   <entry>
     <title><![CDATA[简洁代码[1] 多态 vs 条件语句]]></title>
-    <link href="http://cunqi.github.io/2015/12/01/%E7%AE%80%E6%B4%81%E4%BB%A3%E7%A0%81-%E5%A4%9A%E6%80%81VS%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/"/>
-    <id>http://cunqi.github.io/2015/12/01/简洁代码-多态VS条件语句/</id>
+    <link href="http://cunqi.github.io/2015/11/30/%E7%AE%80%E6%B4%81%E4%BB%A3%E7%A0%81-%E5%A4%9A%E6%80%81VS%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5/"/>
+    <id>http://cunqi.github.io/2015/11/30/简洁代码-多态VS条件语句/</id>
     <published>2015-12-01T01:29:22.000Z</published>
     <updated>2015-12-01T01:39:13.000Z</updated>
     <content type="html"><![CDATA[<h2 id="写在前面">写在前面</h2><p>本文着重描述多态和条件语句的关系，以及如何使用多态来改进代码。</p>
@@ -163,8 +163,8 @@
   
   <entry>
     <title><![CDATA[设计模式学习心得 -- 构建器(Builder)]]></title>
-    <link href="http://cunqi.github.io/2015/11/20/Builder%E6%A8%A1%E5%BC%8F/"/>
-    <id>http://cunqi.github.io/2015/11/20/Builder模式/</id>
+    <link href="http://cunqi.github.io/2015/11/19/Builder%E6%A8%A1%E5%BC%8F/"/>
+    <id>http://cunqi.github.io/2015/11/19/Builder模式/</id>
     <published>2015-11-20T01:18:22.000Z</published>
     <updated>2015-11-20T03:00:50.000Z</updated>
     <content type="html"><![CDATA[<h1 id="Builder模式">Builder模式</h1><p>这个模式我是在《Effective Java》中了解到的，当然其他的设计模式相关书籍也有，我之前也看过一点，但是没怎么放在心上，在实习的时候我也尝试地使用过它，但是用的并不好，现在看来我只是学了一点皮毛罢了，现在重新跟着书本一点一点推敲一遍。</p>
@@ -194,8 +194,8 @@
   
   <entry>
     <title><![CDATA[Swift知识点总结]]></title>
-    <link href="http://cunqi.github.io/2015/11/20/Swift%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"/>
-    <id>http://cunqi.github.io/2015/11/20/Swift知识点总结/</id>
+    <link href="http://cunqi.github.io/2015/11/19/Swift%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/"/>
+    <id>http://cunqi.github.io/2015/11/19/Swift知识点总结/</id>
     <published>2015-11-19T21:26:01.000Z</published>
     <updated>2015-11-20T02:58:17.000Z</updated>
     <content type="html"><![CDATA[<h1 id="写在前面">写在前面</h1><p>这是我在阅读<code>The Swift Programming Language</code>时做的笔记，主要记录的是一些我没办法立刻记住的知识点，以供查阅。</p>
