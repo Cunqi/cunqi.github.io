@@ -1,272 +1,191 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html><html lang="zh"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Trading Dashboard · 板块趋势</title>
+<style>
+:root{--bg:#0b0e14;--card:#151a23;--card2:#1b212c;--line:#283142;--txt:#e6e9ef;--dim:#8b95a7;
+--green:#1ec773;--red:#ff5b5b;--amber:#ffb020;--accent:#4c8dff}
+*{box-sizing:border-box}
+html{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+body{margin:0;background:var(--bg);color:var(--txt);
+font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC",sans-serif}
+a{color:var(--accent);text-decoration:none}
+.wrap{max-width:1240px;margin:0 auto;padding:24px 18px 72px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+h1{font-size:21px;margin:0;letter-spacing:.3px}
+.top .meta{color:var(--dim);font-size:12.5px}
+nav.tabs{display:flex;gap:8px;margin:16px 0 6px;border-bottom:1px solid var(--line)}
+nav.tabs button{background:none;border:0;color:var(--dim);font-size:14px;padding:8px 12px;cursor:pointer;border-bottom:2px solid transparent}
+nav.tabs button.on{color:var(--txt);border-bottom-color:var(--accent);font-weight:600}
+.board{display:none}.board.on{display:block}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:14px 0 6px}
+.card{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer;transition:transform .08s,border-color .08s}
+.card:hover{transform:translateY(-2px)}
+.card.pos{border-left-color:var(--green)}.card.neg{border-left-color:var(--red)}.card.flat{border-left-color:var(--amber)}
+.card .ck{font-size:13px;font-weight:600;display:flex;justify-content:space-between}
+.card .cv{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;margin:2px 0}
+.card .cl{font-size:12px;color:var(--dim);font-weight:500}
+.card .cs{font-size:11.5px;color:var(--dim);margin-top:2px}
+.cbar{margin:6px 0 2px}
+.sb{position:relative;display:inline-block;width:100%;height:8px;background:var(--card2);border-radius:4px;vertical-align:middle}
+.sb i{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--dim);opacity:.5}
+.sb>span{position:absolute;top:0;height:100%;border-radius:4px}
+.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0 4px}
+.controls input{background:var(--card2);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:7px 11px;font-size:13px;width:180px}
+.seg{display:inline-flex;background:var(--card2);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:none;border:0;color:var(--dim);padding:7px 12px;cursor:pointer;font-size:13px}
+.seg button.on{background:var(--accent);color:#fff}
+.controls .hint{color:var(--dim);font-size:12px;margin-left:auto}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:14px}
+section h2{font-size:15px;margin:0 0 8px;font-weight:600;display:flex;align-items:center;gap:10px}
+section h2 .sc{font-variant-numeric:tabular-nums}
+section h2 .sub{font-weight:400;font-size:12.5px;color:var(--dim)}
+.tscroll{overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+.tscroll::-webkit-scrollbar{display:none}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:6px 9px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.3px;font-weight:600;cursor:pointer;user-select:none}
+th.num,td.num{text-align:right}th.ctr,td.ctr{text-align:center}
+th.sortable:hover{color:var(--txt)}th .ar{opacity:.5;font-size:9px}
+.sym{font-weight:700}.pos{color:var(--green)}.neg{color:var(--red)}.flat{color:var(--dim)}.dim{color:var(--dim)}
+.sbwrap{display:flex;align-items:center;gap:8px;justify-content:flex-end}.sbwrap .sb{width:80px}
+.sig{font-size:11.5px;max-width:230px;overflow:hidden;text-overflow:ellipsis}
+.empty{color:var(--dim);font-style:italic;padding:8px 2px}
+footer{margin-top:28px;color:var(--dim);font-size:12px;text-align:center}
+</style></head><body><div class="wrap">
+<header class="top">
+  <div><h1>📊 Trading Dashboard</h1>
+  <div class="meta" id="meta"></div></div>
+</header>
+<nav class="tabs" id="tabs">
+  <button class="on" data-board="sector">板块趋势</button>
+</nav>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Privacy Policy · GalleryTok</title>
-  <style>
-    :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --accent: #60a5fa;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      line-height: 1.6;
-      background: linear-gradient(180deg, #0b1220, #0f172a 40%, #0b1220 100%);
-      color: var(--text);
-    }
-
-    .container {
-      max-width: 880px;
-      margin: 0 auto;
-      padding: 48px 20px 72px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-
-    h1 {
-      font-size: clamp(26px, 5vw, 40px);
-      line-height: 1.1;
-      margin: 0 0 10px;
-      letter-spacing: -0.02em;
-    }
-
-    .badge {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .card {
-      background: rgba(17, 24, 39, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 28px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-      margin-bottom: 50px;
-    }
-
-    h2 {
-      font-size: 20px;
-      margin: 28px 0 10px;
-      color: #f3f4f6;
-    }
-
-    p,
-    li {
-      color: var(--text);
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    footer {
-      margin-top: 36px;
-      font-size: 14px;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .hr {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      margin: 22px 0;
-      border: 0;
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-
-    <!-- English Version -->
-    <header>
-      <div>
-        <h1>Privacy Policy</h1>
-        <div class="badge">Effective Date: September 22, 2025</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="badge">App: <strong>GalleryTok</strong></div>
-      </div>
-    </header>
-
-    <div class="card">
-      <h2>1. Introduction</h2>
-      <p>GalleryTok (“we,” “our,” or “us”) is committed to protecting your privacy. This Privacy Policy explains how we
-        collect, use, and safeguard your information when you use our mobile application (“App”). By using GalleryTok,
-        you agree to the practices described in this Privacy Policy.</p>
-
-      <div class="hr"></div>
-
-      <h2>2. Information We Collect</h2>
-      <ul>
-        <li><strong>Photos and Videos:</strong> With your permission, GalleryTok accesses your device’s photo library to
-          allow browsing, organizing, and detecting duplicate photos and videos.</li>
-        <li><strong>App Usage Data:</strong> We may collect anonymous, aggregated usage statistics (e.g., which features
-          are used most often) to help us improve the App.</li>
-        <li><strong>No Personal Account Required:</strong> GalleryTok does not require you to create an account or
-          provide personally identifiable information (such as name, email, phone number).</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>3. How We Use Information</h2>
-      <ul>
-        <li>To provide core functionality, such as browsing, organizing, and deleting photos/videos.</li>
-        <li>To improve the performance and user experience of the App.</li>
-        <li>To support customer inquiries and technical assistance.</li>
-      </ul>
-      <p>We <strong>do not</strong> sell, rent, or share your personal information with third parties for marketing
-        purposes.</p>
-
-      <div class="hr"></div>
-
-      <h2>4. Data Storage and Security</h2>
-      <ul>
-        <li>All photo and video analysis is performed <strong>locally on your device</strong>. Your media is never
-          uploaded to our servers.</li>
-        <li>If the App uses iCloud (optional), your data is stored securely in Apple’s cloud infrastructure.</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>5. Third-Party Services</h2>
-      <p>The App may use Apple services such as:</p>
-      <ul>
-        <li><strong>StoreKit</strong> for in-app purchases.</li>
-        <li><strong>iCloud</strong> (if enabled) for syncing across devices.</li>
-      </ul>
-      <p>These services are subject to Apple’s privacy policies.</p>
-
-      <div class="hr"></div>
-
-      <h2>6. Your Choices</h2>
-      <ul>
-        <li>You can revoke the App’s access to your photo library at any time in your device settings.</li>
-        <li>You can delete the App to remove all locally stored data.</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>7. Children’s Privacy</h2>
-      <p>Our App is not intended for children under the age of 13. We do not knowingly collect personal information from
-        children.</p>
-
-      <div class="hr"></div>
-
-      <h2>8. Changes to This Policy</h2>
-      <p>We may update this Privacy Policy from time to time. Updates will be reflected with a new “Effective Date.”</p>
-
-      <div class="hr"></div>
-
-      <h2>9. Contact Us</h2>
-      <p>If you have questions or concerns about this Privacy Policy, please contact us at:</p>
-      <p><strong>Email:</strong> <a href="mailto:galleryflow.xiao@gmail.com">galleryflow.xiao@gmail.com</a><br />
+<div class="board on" id="board-sector">
+  <div class="cards" id="cards"></div>
+  <div class="controls">
+    <input id="q" placeholder="搜索代码…" autocomplete="off">
+    <div class="seg" id="filter">
+      <button class="on" data-f="all">全部</button>
+      <button data-f="bull">多头</button>
+      <button data-f="chop">震荡</button>
+      <button data-f="bear">空头</button>
     </div>
-
-    <!-- Chinese Version -->
-    <header>
-      <div>
-        <h1>隐私政策</h1>
-        <div class="badge">生效日期：2025 年 9 月 22 日</div>
-      </div>
-      <div style="text-align:right;">
-        <div class="badge">应用：<strong>GalleryTok</strong></div>
-      </div>
-    </header>
-
-    <div class="card">
-      <h2>1. 简介</h2>
-      <p>GalleryTok（以下简称“我们”）重视您的隐私。本隐私政策解释了当您使用我们的移动应用（以下简称“应用”）时，我们如何收集、使用和保护您的信息。使用 GalleryTok 即表示您同意本隐私政策所述做法。</p>
-
-      <div class="hr"></div>
-
-      <h2>2. 我们收集的信息</h2>
-      <ul>
-        <li><strong>照片和视频：</strong> 在您授权的情况下，GalleryTok 会访问您设备的照片库，以便浏览、整理以及检测重复的照片和视频。</li>
-        <li><strong>应用使用数据：</strong> 我们可能会收集匿名的汇总使用统计信息（例如哪些功能使用最频繁），用于改进应用。</li>
-        <li><strong>无需个人账户：</strong> GalleryTok 无需您创建账户或提供任何可识别个人身份的信息（如姓名、邮箱、电话号码）。</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>3. 信息的使用方式</h2>
-      <ul>
-        <li>提供核心功能，例如浏览、整理和删除照片/视频。</li>
-        <li>改进应用的性能和用户体验。</li>
-        <li>支持客户咨询和技术协助。</li>
-      </ul>
-      <p>我们<strong>不会</strong>出售、出租或与第三方分享您的个人信息用于营销目的。</p>
-
-      <div class="hr"></div>
-
-      <h2>4. 数据存储与安全</h2>
-      <ul>
-        <li>所有照片和视频分析均在<strong>您的设备本地</strong>完成，您的媒体不会上传至我们的服务器。</li>
-        <li>如果应用使用 iCloud（可选），您的数据将安全存储在 Apple 的云端基础设施中。</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>5. 第三方服务</h2>
-      <p>应用可能使用 Apple 提供的服务，例如：</p>
-      <ul>
-        <li><strong>StoreKit</strong>：用于应用内购买。</li>
-        <li><strong>iCloud</strong>（如果启用）：用于跨设备同步。</li>
-      </ul>
-      <p>这些服务受 Apple 自身的隐私政策约束。</p>
-
-      <div class="hr"></div>
-
-      <h2>6. 您的选择</h2>
-      <ul>
-        <li>您可随时在设备设置中撤销应用对照片库的访问权限。</li>
-        <li>您可以删除应用以移除所有本地存储的数据。</li>
-      </ul>
-
-      <div class="hr"></div>
-
-      <h2>7. 儿童隐私</h2>
-      <p>我们的应用不适用于 13 岁以下儿童。我们不会有意收集儿童的个人信息。</p>
-
-      <div class="hr"></div>
-
-      <h2>8. 政策变更</h2>
-      <p>我们可能会不时更新本隐私政策。更新将通过新的“生效日期”予以说明。</p>
-
-      <div class="hr"></div>
-
-      <h2>9. 联系我们</h2>
-      <p>如果您对本隐私政策有任何问题或疑虑，请通过以下方式联系我们：</p>
-      <p><strong>邮箱：</strong> <a href="mailto:galleryflow.xiao@gmail.com">galleryflow.xiao@gmail.com</a><br />
-    </div>
-
-    <footer>
-      © 2025 GalleryTok. All rights reserved.
-    </footer>
+    <span class="hint">点表头排序 · 点板块卡片跳转</span>
   </div>
-</body>
+  <div id="sectors"></div>
+</div>
 
-</html>
+<footer id="foot"></footer>
+</div>
+<script>
+const DATA = {"date": "2026-06-27", "gen": "2026-06-27 21:49:37 PDT", "sectors": [{"name": "功率半导体", "score": 31.6, "n": 3, "n_bull": 1, "n_bear": 0, "n_chop": 2, "wk_up": 3, "missing": [], "members": [{"sym": "VSH", "score": 71.0, "label": "强多", "price": 59.91, "e20": 5.5, "e50": 29.0, "e200": 112.5, "rsi": 58.2, "adx": 48.4, "macd": "空", "wk": "↑", "pos52": 83.0, "atr": 9.7, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "NVTS", "score": 17.0, "label": "震荡", "price": 17.7, "e20": -21.1, "e50": -13.7, "e200": 32.6, "rsi": 39.4, "adx": 22.4, "macd": "空", "wk": "↑", "pos52": 43.0, "atr": 16.3, "sig": "周升日弱·分歧"}, {"sym": "WOLF", "score": 6.7, "label": "震荡", "price": 47.79, "e20": -6.5, "e50": 2.6, "e200": null, "rsi": 47.3, "adx": 17.1, "macd": "空", "wk": "↑", "pos52": 55.0, "atr": 17.2, "sig": "ADX 17 震荡"}]}, {"name": "半导体/AI芯片", "score": 22.3, "n": 6, "n_bull": 2, "n_bear": 0, "n_chop": 4, "wk_up": 6, "missing": [], "members": [{"sym": "MRVL", "score": 71.0, "label": "强多", "price": 281.26, "e20": 4.8, "e50": 27.4, "e200": 104.1, "rsi": 56.5, "adx": 34.5, "macd": "空", "wk": "↑", "pos52": 82.0, "atr": 9.7, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "AMD", "score": 59.0, "label": "强多", "price": 532.57, "e20": 5.6, "e50": 21.3, "e200": 80.3, "rsi": 58.5, "adx": 24.4, "macd": "空", "wk": "↑", "pos52": 93.0, "atr": 6.3, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "QCOM", "score": 18.4, "label": "震荡", "price": 204.9, "e20": -3.7, "e50": 3.1, "e200": 20.2, "rsi": 47.8, "adx": 19.8, "macd": "空", "wk": "↑", "pos52": 61.0, "atr": 8.4, "sig": "ADX 20 震荡"}, {"sym": "AXTI", "score": 5.0, "label": "震荡", "price": 69.06, "e20": -24.1, "e50": -23.0, "e200": 32.3, "rsi": 38.5, "adx": 23.7, "macd": "空", "wk": "↑", "pos52": 48.0, "atr": 20.4, "sig": "周升日弱·分歧"}, {"sym": "NVDA", "score": -9.7, "label": "震荡", "price": 195.74, "e20": -5.4, "e50": -4.9, "e200": 3.7, "rsi": 39.7, "adx": 15.9, "macd": "空", "wk": "↑", "pos52": 52.0, "atr": 3.8, "sig": "周升日弱·分歧 · ADX 16 震荡"}, {"sym": "AVGO", "score": -9.7, "label": "震荡", "price": 378.91, "e20": -4.7, "e50": -4.5, "e200": 7.3, "rsi": 43.4, "adx": 19.0, "macd": "空", "wk": "↑", "pos52": 51.0, "atr": 5.2, "sig": "周升日弱·分歧 · ADX 19 震荡"}]}, {"name": "AI算力/数据中心", "score": 17.2, "n": 5, "n_bull": 3, "n_bear": 1, "n_chop": 1, "wk_up": 4, "missing": [], "members": [{"sym": "NBIS", "score": 59.0, "label": "强多", "price": 256.63, "e20": 3.6, "e50": 20.9, "e200": 85.9, "rsi": 56.7, "adx": 23.5, "macd": "空", "wk": "↑", "pos52": 83.0, "atr": 9.9, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "DLR", "score": 51.5, "label": "强多", "price": 192.44, "e20": 1.8, "e50": 2.4, "e200": 9.1, "rsi": 55.3, "adx": 19.6, "macd": "多", "wk": "↑", "pos52": 77.0, "atr": 2.6, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "VRT", "score": 22.4, "label": "偏多", "price": 303.95, "e20": -4.3, "e50": -2.5, "e200": 24.8, "rsi": 45.9, "adx": 12.8, "macd": "多", "wk": "↑", "pos52": 72.0, "atr": 7.0, "sig": "ADX 13 震荡"}, {"sym": "CRWV", "score": -8.1, "label": "震荡", "price": 98.76, "e20": -7.6, "e50": -6.8, "e200": -2.8, "rsi": 43.1, "adx": 11.0, "macd": "空", "wk": "↑", "pos52": 32.0, "atr": 8.9, "sig": "周升日弱·分歧 · ADX 11 震荡"}, {"sym": "SMCI", "score": -39.0, "label": "偏空", "price": 31.68, "e20": -7.5, "e50": -5.7, "e200": -9.1, "rsi": 45.5, "adx": 22.6, "macd": "空", "wk": "↓", "pos52": 28.0, "atr": 10.8, "sig": "日周共振向下 ↓↓"}]}, {"name": "光通信", "score": 12.0, "n": 3, "n_bull": 1, "n_bear": 0, "n_chop": 2, "wk_up": 3, "missing": [], "members": [{"sym": "COHR", "score": 47.5, "label": "偏多", "price": 407.25, "e20": 5.2, "e50": 13.1, "e200": 59.8, "rsi": 55.1, "adx": 17.3, "macd": "空", "wk": "↑", "pos52": 91.0, "atr": 8.9, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "AAOI", "score": -5.7, "label": "震荡", "price": 135.69, "e20": -17.2, "e50": -14.8, "e200": 36.8, "rsi": 40.4, "adx": 15.5, "macd": "空", "wk": "↑", "pos52": 54.0, "atr": 15.9, "sig": "周升日弱·分歧 · ADX 16 震荡"}, {"sym": "LITE", "score": -5.7, "label": "震荡", "price": 816.98, "e20": -6.8, "e50": -5.7, "e200": 36.0, "rsi": 44.0, "adx": 8.7, "macd": "空", "wk": "↑", "pos52": 73.0, "atr": 9.8, "sig": "周升日弱·分歧 · ADX 9 震荡"}]}, {"name": "加密/矿", "score": 4.0, "n": 4, "n_bull": 1, "n_bear": 1, "n_chop": 2, "wk_up": 3, "missing": [], "members": [{"sym": "MARA", "score": 59.0, "label": "强多", "price": 14.54, "e20": 4.2, "e50": 12.1, "e200": 15.5, "rsi": 56.2, "adx": 23.6, "macd": "空", "wk": "↑", "pos52": 47.0, "atr": 8.8, "sig": "日周共振向上 ↑↑ · 日线多头排列"}, {"sym": "WULF", "score": 18.4, "label": "震荡", "price": 26.06, "e20": -1.1, "e50": 9.1, "e200": 52.4, "rsi": 51.2, "adx": 16.3, "macd": "空", "wk": "↑", "pos52": 86.0, "atr": 8.1, "sig": "ADX 16 震荡"}, {"sym": "IREN", "score": 2.3, "label": "震荡", "price": 47.74, "e20": -15.1, "e50": -11.9, "e200": 6.5, "rsi": 39.3, "adx": 17.3, "macd": "空", "wk": "↑", "pos52": 55.0, "atr": 11.0, "sig": "周升日弱·分歧 · ADX 17 震荡"}, {"sym": "COIN", "score": -63.5, "label": "强空", "price": 142.52, "e20": -13.4, "e50": -19.2, "e200": -34.0, "rsi": 33.0, "adx": 18.6, "macd": "空", "wk": "↓", "pos52": 1.0, "atr": 7.8, "sig": "日周共振向下 ↓↓ · 日线空头排列"}]}, {"name": "太空", "score": -26.8, "n": 3, "n_bull": 0, "n_bear": 2, "n_chop": 1, "wk_up": 3, "missing": [], "members": [{"sym": "RKLB", "score": -15.0, "label": "震荡", "price": 84.54, "e20": -18.2, "e50": -17.4, "e200": 8.8, "rsi": 37.2, "adx": 29.6, "macd": "空", "wk": "↑", "pos52": 44.0, "atr": 11.5, "sig": "周升日弱·分歧 · ADX 30 趋势强"}, {"sym": "ASTS", "score": -30.5, "label": "偏空", "price": 71.45, "e20": -14.3, "e50": -18.0, "e200": -9.1, "rsi": 40.8, "adx": 19.7, "macd": "空", "wk": "↑", "pos52": 36.0, "atr": 13.0, "sig": "周升日弱·分歧 · ADX 20 震荡"}, {"sym": "LUNR", "score": -35.0, "label": "偏空", "price": 18.7, "e20": -28.6, "e50": -31.8, "e200": -9.6, "rsi": 32.4, "adx": 23.7, "macd": "空", "wk": "↑", "pos52": 28.0, "atr": 17.4, "sig": "周升日弱·分歧"}]}]};
+const $ = s => document.querySelector(s);
+const st = {filter:"all", q:"", sort:{}};   // sort[sectorName] = {key,dir}
+
+const bkt = sc => sc>=50?["强多","pos"]:sc>=20?["偏多","pos"]:sc>-20?["震荡","flat"]:sc>-50?["偏空","neg"]:["强空","neg"];
+const vcls = x => x==null?"flat":(x>0?"pos":(x<0?"neg":"flat"));
+const pc = x => x==null?"—":(x>0?"+":"")+Math.round(x)+"%";
+const num = x => x==null?"—":x;
+function sbar(sc){
+  let seg = sc>=0 ? `left:50%;width:${sc/100*50}%;background:var(--green)`
+                  : `left:${50-Math.abs(sc)/100*50}%;width:${Math.abs(sc)/100*50}%;background:var(--red)`;
+  return `<span class="sb"><i></i><span style="${seg}"></span></span>`;
+}
+function matches(m){
+  if(st.q && !m.sym.toLowerCase().includes(st.q)) return false;
+  if(st.filter==="bull" && m.score<20) return false;
+  if(st.filter==="bear" && m.score>-20) return false;
+  if(st.filter==="chop" && !(m.score>-20 && m.score<20)) return false;
+  return true;
+}
+const COLS = [
+  {k:"sym",   t:"标的",  cls:"sym"},
+  {k:"score", t:"评分",  num:1, bar:1},
+  {k:"label", t:"趋势"},
+  {k:"price", t:"现价",  num:1},
+  {k:"e20",   t:"EMA20", num:1, pct:1},
+  {k:"e50",   t:"EMA50", num:1, pct:1},
+  {k:"e200",  t:"EMA200",num:1, pct:1},
+  {k:"rsi",   t:"RSI",   num:1},
+  {k:"adx",   t:"ADX",   num:1},
+  {k:"macd",  t:"MACD柱"},
+  {k:"wk",    t:"周线",  ctr:1},
+  {k:"pos52", t:"52w",   num:1, pct2:1},
+  {k:"atr",   t:"ATR",   num:1, pct2:1},
+  {k:"sig",   t:"信号",  cls:"sig dim"},
+];
+function cell(m,c){
+  let v=m[c.k];
+  if(c.bar) return `<td class="num"><div class="sbwrap">${sbar(m.score)}<b class="${vcls(m.score)}">${(m.score>0?"+":"")+Math.round(m.score)}</b></div></td>`;
+  if(c.k==="label"){let[,cl]=bkt(m.score);return `<td class="${cl}">${v}</td>`;}
+  if(c.k==="wk"){let cl=v==="↑"?"pos":(v==="↓"?"neg":"dim");return `<td class="ctr ${cl}">${v}</td>`;}
+  if(c.k==="macd"){let cl=v==="多"?"pos":(v==="空"?"neg":"dim");return `<td class="${cl}">${v}</td>`;}
+  if(c.pct) return `<td class="num ${vcls(v)}">${pc(v)}</td>`;
+  if(c.pct2) return `<td class="num dim">${v==null?"—":v+"%"}</td>`;
+  if(c.num) return `<td class="num">${num(v)}</td>`;
+  return `<td class="${c.cls||""}">${v==null?"":v}</td>`;
+}
+function sortMembers(sec){
+  let ms = sec.members.filter(matches);
+  let s = st.sort[sec.name];
+  if(s){
+    ms = ms.slice().sort((a,b)=>{
+      let x=a[s.key], y=b[s.key];
+      if(x==null)x=-1e9; if(y==null)y=-1e9;
+      if(typeof x==="string") return s.dir*x.localeCompare(y);
+      return s.dir*(x-y);
+    });
+  }
+  return ms;
+}
+function renderCards(){
+  $("#cards").innerHTML = DATA.sectors.map((sec,i)=>{
+    let[lab,cl]=bkt(sec.score);
+    return `<div class="card ${cl}" data-i="${i}">
+      <div class="ck"><span>${i+1}. ${sec.name}</span><span class="cl">${lab}</span></div>
+      <div class="cv ${cl}">${(sec.score>0?"+":"")+Math.round(sec.score)}</div>
+      <div class="cbar">${sbar(sec.score)}</div>
+      <div class="cs">广度 ${sec.n_bull}/${sec.n}多${sec.n_bear?(" "+sec.n_bear+"空"):""} · 周线↑${sec.wk_up}/${sec.n}</div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll(".card").forEach(c=>c.onclick=()=>{
+    let el=document.getElementById("sec"+c.dataset.i);
+    if(el)el.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+}
+function renderSectors(){
+  $("#sectors").innerHTML = DATA.sectors.map((sec,i)=>{
+    let[lab,cl]=bkt(sec.score);
+    let ms=sortMembers(sec);
+    let s=st.sort[sec.name];
+    let head=COLS.map(c=>{
+      let ar = s&&s.key===c.k ? `<span class="ar">${s.dir>0?"▲":"▼"}</span>` : "";
+      let kls=(c.num?"num ":"")+(c.ctr?"ctr ":"")+"sortable";
+      return `<th class="${kls}" data-sec="${i}" data-key="${c.k}">${c.t}${ar}</th>`;
+    }).join("");
+    let body = ms.length ? ms.map(m=>"<tr>"+COLS.map(c=>cell(m,c)).join("")+"</tr>").join("")
+                         : `<tr><td colspan="${COLS.length}" class="empty">无匹配</td></tr>`;
+    let miss = sec.missing&&sec.missing.length ? `<div class="empty">无数据: ${sec.missing.join(", ")}</div>`:"";
+    return `<section id="sec${i}"><h2><span class="sc ${cl}">${(sec.score>0?"+":"")+Math.round(sec.score)}</span> ${sec.name}
+      <span class="sub">${lab} · 广度 ${sec.n_bull}/${sec.n}多 · 周线↑${sec.wk_up}/${sec.n} · 排名 ${i+1}/${DATA.sectors.length}</span></h2>
+      <div class="tscroll"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>${miss}</section>`;
+  }).join("");
+  document.querySelectorAll("th.sortable").forEach(th=>th.onclick=()=>{
+    let name=DATA.sectors[+th.dataset.sec].name, key=th.dataset.key;
+    let cur=st.sort[name];
+    st.sort[name] = (cur&&cur.key===key)?{key,dir:-cur.dir}:{key,dir:-1};
+    renderSectors();
+  });
+}
+function render(){renderCards();renderSectors();}
+$("#q").oninput = e=>{st.q=e.target.value.trim().toLowerCase();renderSectors();};
+document.querySelectorAll("#filter button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("#filter button").forEach(x=>x.classList.remove("on"));
+  b.classList.add("on"); st.filter=b.dataset.f; renderSectors();
+});
+$("#meta").textContent = `${DATA.date} · ${DATA.sectors.length} 板块 · 等权聚合(日线EMA排列+ADX+动能+周线共振) · 数据 yfinance / 指标 pandas-ta`;
+$("#foot").textContent = `生成于 ${DATA.gen} · 评分为自定义加权启发式,仅供分析,非交易建议 · noindex`;
+render();
+</script>
+</body></html>
